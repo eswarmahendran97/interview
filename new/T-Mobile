@@ -1,0 +1,14 @@
+Image/Icons will not be in Bundle crerated?
+The JavaScript bundle doesn’t embed the actual image pixels, It only includes a URL reference to that optimized image file.
+So when your React code runs in the browser:
+    <img src="/assets/logo.89df3.png" />
+The browser makes a new HTTP request to fetch logo.89df3.png.
+
+Find why web app is slow
+
+Frontend:
+Many images or icons - makes many request to get the image or icons
+    solution: Single request
+        Icon sprite -  A Sprite sheet - single sprite file containing all icons.)
+        Image Atlas - Combine all images into one large image
+        both are applied with css

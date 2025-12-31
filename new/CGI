@@ -1,0 +1,184 @@
+CGI
+
+Docker commands
+Docker file
+FROM openjdk:17-jdk-alpine
+WORKDIR /app
+COPY myapp.jar app.jar   //app/app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]   // run java -jar app.jar when container starts
+
+build
+Docker build -t my-java-app .
+
+run (creates container)
+docker run --name my-container -p 8080:8080 my-java-app
+
+list of images
+docker image ls
+
+
+Karate
+karate-config.js
+configuration like baseurl etc
+
+feature file
+    scenario: 'some scenario'
+    url
+    Given path
+    when
+    then
+
+java test file
+@Karate.Test
+@Order(1)
+Karate testApplicationsFeature() {
+    return Karate.run("classpath:features/Applications.feature").relativeTo(getClass());
+}
+
+command: mvn test -Dkarate.env=dev
+
+
+
+Junit
+@SpringBootTest
+
+
+
+Kafka setup
+create bean for KafkaProducerTemplate with
+    bootstrap server
+    key serializer
+    value serializer
+    ack
+    schemaregistry url
+    truststore
+    keystore
+
+  @Bean
+  public ProducerFactory<Integer, EmployeeRequest> producerFactory() throws IOException {
+    return new DefaultKafkaProducerFactory<>(createProps());
+  }
+
+  @Bean
+  public KafkaTemplate<Integer, EmployeeRequest> employeeKafkaTemplate()
+      throws IOException {
+    return new KafkaTemplate<>(producerFactory());
+  }
+
+  autowire it use anywhere
+
+  @Autowired
+  private KafkaTemplate<Integer, EmployeeRequest>
+      employeeKafkaTemplate;
+
+    employeeKafkaTemplate.send('topic', employeeRequest)
+
+
+
+cqrs
+2 sepearte serives for read and write
+use when ratio of writes and reads differs significantly. So u can scale independently.... not for normal crud
+write service - nosql, read service - sql preferrable
+
+Disadvatage:
+    Eventual consistent
+
+
+
+ElasticSearch
+
+cannot store a document without index
+bool Query: bool query is very powerful and flexible for combining multiple conditions (AND, OR, NOT)
+
+Same as data-jpa
+
+configuration file
+
+@Configuration
+public class MyClientConfig extends ReactiveElasticsearchConfiguration {
+
+	@Override
+	public ClientConfiguration clientConfiguration() {
+		return ClientConfiguration.builder()           (1)
+			.connectedTo("localhost:9200")
+			.build();
+	}
+}
+
+repository file
+public interface ArticleRepository extends ElasticsearchRepository<Article, String> {
+
+    Page<Article> findByAuthorsName(String name, Pageable pageable);
+
+    @Query("{\"bool\": {\"must\": [{\"match\": {\"authors.name\": \"?0\"}}]}}")
+    Page<Article> findByAuthorsNameUsingCustomQuery(String name, Pageable pageable);
+}
+
+mappings
+@Document(indexName = "blog")
+public class Article {
+
+    @Id
+    private String id;
+    
+    private String title;
+    
+    @Field(type = FieldType.Nested, includeInParent = true)
+    private List<Author> authors;
+    
+    // standard getters and setters
+}
+
+
+indexing
+operations are used for this... on save index is created automatically. ArticleRepository internally uses operations.. so it creates index while save
+
+    @Autowired
+    ElasticsearchOperations elasticsearchOperations;
+    @Autowired
+    ArticleRepository articleRepository;
+  
+    @PostMapping("/article")
+    public String save(@RequestBody Article article) {     
+        articleRepository.save(article);                    
+    Article savedEntity = articleRepository.save(article);
+    return savedEntity.getId();
+
+
+    @PostMapping("/search")
+    public String search() {     
+    SearchHits savedEntity = elasticsearchOperations.search(searchQuery, Article.class, IndexCoordinates.of("blog"));
+  }
+
+quering
+using elasticsearchOperations with query
+elasticsearchOperations.search(searchQuery, Article.class, IndexCoordinates.of("blog"));
+
+using elasticSearchRestClient
+@Autowired private RestHighLevelClient openSearchRestClient;
+
+ SearchRequest request = new SearchRequest('indexName');
+ SearchSourceBuilder sourceBuilder =
+        new SearchSourceBuilder()
+            .query(QueryBuilders.termsQuery('title', 'test'))
+            .size(locationIds.size());
+
+    request.source(sourceBuilder);
+
+    SearchResponse response = openSearchRestClient.getSearch(request);
+
+
+
+Elasticsearch return with searchHits
+client.search return response
+reponse have SearchHits
+
+elasticsearchOperations.search return SearchHits
+
+to take out data
+for (SearchHit hit : hits.getHits()) {
+    String json = hit.getSourceAsString();
+    // parse or process the JSON document here
+}
+
+

@@ -1,0 +1,56 @@
+Synchronized vs ReentrantLock
+Synchronized -> A keyword in Java that provides implicit locking — the JVM manages the lock for you.
+ReentrantLock -> explicit locking
+Eg:
+    ReentrantLock lock = new ReentrantLock();
+
+    lock.lock();  // acquire
+    try {
+        // critical section
+    } finally {
+        lock.unlock(); // must release manually
+    }
+
+
+Volatile
+    used on variable level
+    Visibilty of value for all thread
+
+    
+How concurrent hashmap is thread safe -> CAS + synch block
+
+
+Caching in HIbernet
+    First-level -> Per Session
+    Second-Level -> Per session factor (config needed in entity file)
+    Query Cache
+
+Make restapi idempotent
+    Whether a request is idempotent or not ultimately depends on how your backend code handles it, not just on the HTTP method itself.
+    The HTTP method only suggests how the request should behave semantically(idempotent, non-idempotent)
+
+handle db connection leak
+    Try with resource
+    Use a connection pool
+    JPA
+
+avoid circular dependency in springboot
+    Setter injection in one size
+    @Lazy
+
+@Transactional class vs method
+    Class level -> all public method will be under a transaction based in propagation
+    method level -> just for method
+
+Senario
+@Transactional
+public void save(){
+    saveAll();
+}
+
+@Transactional(propagation="REQUIRED_NEW")
+public void saveAll(){
+    //..
+}
+
+second Transactional will not be used

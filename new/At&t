@@ -1,0 +1,51 @@
+Unix/Linux
+
+ls - list the files
+ps -ef - list of running process
+cd - change directory
+pwd - print working directory
+mkdir - create directory
+touch file.txt - create file
+cp - copy
+mv - move
+rm - remove
+find - grep
+kill - kill a process
+netstat - Network
+
+
+How security is maintained in Kafka
+
+SSL(keystore, truststore)
+security.protocol=SSL
+ssl.keystore.location=/etc/kafka/client.keystore.jks
+ssl.keystore.password=clientpass
+ssl.truststore.location=/etc/kafka/client.truststore.jks
+ssl.truststore.password=trustpass
+
+SASL(username, password hashing)
+security.protocol=SASL_SSL
+sasl.mechanism=SCRAM-SHA-512
+sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required \
+    username="producer1" \
+    password="secret";
+
+
+will JVM allows fiveton?
+  Yes
+
+
+Types of connection pooling?
+Fixed, Dynamic, Partitioned, Lazy, Pre-initialized
+
+Eg: HikariCP (Most Popular connection pooling library)
+
+
+10th largest salary
+SELECT DISTINCT salary
+FROM employee e1
+WHERE 10 = (
+  SELECT COUNT(DISTINCT salary)
+  FROM employee e2
+  WHERE e2.salary > e1.salary
+);

@@ -1,0 +1,63 @@
+Wipro
+
+@Configuration
+public class AppConfig {
+   @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+
+@Service
+
+@Autowired
+RestTemplate restTemplate;
+
+public String getOrder() {
+    ResponseEntity<String> response =
+            restTemplate.getForEntity("http://order-service/orders/123", String.class);
+    return response.getBody();
+}
+
+public String createOrder(Map<String, Object> orderPayload) {
+    HttpEntity<Map<String, Object>> request = new HttpEntity<>(orderPayload);
+    ResponseEntity<String> response =
+            restTemplate.postForEntity("http://order-service/orders", request, String.class);
+    return response.getBody();
+}
+
+
+webclient
+
+@Autowired
+WebClient webClient;
+
+@Configuration
+public class WebClientConfig {
+
+    @Bean
+    public WebClient webClient(WebClient.Builder builder) {
+        return builder
+                .baseUrl("http://order-service")
+                .build();
+    }
+}
+
+@service
+public Mono<String> getOrder() {
+    return webClient.get()
+            .uri("/orders/123")
+            .retrieve()
+            .bodyToMono(String.class);
+}
+
+public Mono<String> createOrder(Map<String, Object> payload) {
+    return webClient.post()
+            .uri("/orders")
+            .bodyValue(payload)
+            .retrieve()
+            .bodyToMono(String.class);
+}
+
+
+

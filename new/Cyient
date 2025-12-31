@@ -1,0 +1,59 @@
+
+Cyient
+
+1) @EnableAutoConfiguration
+It scans the classpath for common libraries 
+(e.g., spring-boot-starter-web, spring-boot-starter-data-jpa) 
+And automatically configures the necessary beans and components, such as DispatcherServlet for web applications or DataSource and EntityManager for database interactions.
+
+2) FlatMap in java
+flatMap() concatenates all these individual streams into a single, flat stream
+list.stream().flatMap(list -> list.stream()).collect(Collectors.toList());
+
+3) Actuators
+Provides features for monitoring and managing a Spring Boot application. Eg; health
+How to secure it?
+Ratelimiter, expose only to tools used, access of authorize person in spring security
+
+4) Java 17
+Sealed class
+eg: public sealed class Vehicle permits Car, Truck {}
+Pattern matching in switch
+static String formatter(Object o) {
+    return switch (o) {
+        case Integer i -> "int: " + i;
+        case String s -> "String: " + s;
+        default -> "unknown";
+    };
+}
+
+used instead of enums
+
+5)
+public static void main(String[] args) {
+	    HashSet shortSet = new HashSet();
+	    for(short i=0; i<100; i++){
+	        shortSet.add(i);
+	        shortSet.remove(i+1);
+	    }
+		System.out.println(shortSet.size());
+}
+
+will not throw expception
+no error/exception will be thrown if an element or key is not found when removing from a Set or a Map in Java.
+
+output: 100... trying to remove int when set has short values.. i is short but i+1 becomes int
+
+6) Design pattern in java
+Singleton
+Adaptor
+Saga
+Circuitbreaker
+Service discovery
+Event driven
+BFF
+
+6) get second max salary from employe table
+SELECT max(salary) from Employee where salary < (SELECT max(salary) from Employee);
+Top3
+SELECT salary FROM Employee ORDER BY salary DESC LIMIT 3;
