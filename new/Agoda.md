@@ -5,6 +5,7 @@ Find “why website is slow only for a particular customer"?
 Integrate the web-vitals library in your app.
 
 import {getLCP, getCLS, getINP} from 'web-vitals';
+
 getLCP(console.log); // Largest contentful paint -> How fast content appears
 getCLS(console.log); // Cumulative Layout Shift -> Visual stability
 getINP(console.log); // Interaction to Next Paint -> fast does the page respond when I interact
